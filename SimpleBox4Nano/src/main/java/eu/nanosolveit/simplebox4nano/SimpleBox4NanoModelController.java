@@ -21,7 +21,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Session;
@@ -1027,7 +1026,7 @@ public class SimpleBox4NanoModelController extends SelectorComposer<Window>{
 	}
 
 	@Listen("onClick = #calculate")
-	public void openOutput() {		
+	public void openOutput() throws Exception {		
 
 		//Adjust nano data coming from the user (if (s)he has changed it)
 		adjustNanoData();

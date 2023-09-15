@@ -1,5 +1,9 @@
 package eu.nanosolveit.simplebox4nano;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,16 +29,107 @@ public class SimpleBox4NanoModel {
 
 	Map<String, Map<String, String> > nanoData = new HashMap<String, Map<String, String> >(); 
 	Map<String, Scenario> scenariosData = new HashMap<String, Scenario >();
-	
+
 	String nanoName = null;
 	String sceneName = null;
 	
+	output out = null;
+
+	public SimpleBox4NanoModel( SimpleBox4NanoApiInput userInput ) throws Exception {
+
+		sceneName = userInput.getScenario();
+		nanoName = userInput.getNanomaterial();
+
+		loadScenarios();
+
+		//Replace with user values or from the API
+		scenariosData.get( sceneName ).putSolidInfo("REGIONAL", "E.aRS",  String.valueOf( userInput.getE_aRS() ) );
+		scenariosData.get( sceneName ).putSolidInfo("REGIONAL", "E.w0RS", String.valueOf( userInput.getE_w0RS() ) );
+		scenariosData.get( sceneName ).putSolidInfo("REGIONAL", "E.w1RS", String.valueOf( userInput.getE_w1RS() ) );
+		scenariosData.get( sceneName ).putSolidInfo("REGIONAL", "E.w2RS", String.valueOf( userInput.getE_w2RS() ) );
+		scenariosData.get( sceneName ).putSolidInfo("REGIONAL", "E.s1RS", String.valueOf( userInput.getE_s1RS() ) );
+		scenariosData.get( sceneName ).putSolidInfo("REGIONAL", "E.s2RS", String.valueOf( userInput.getE_s2RS() ) );
+		scenariosData.get( sceneName ).putSolidInfo("REGIONAL", "E.s3RS", String.valueOf( userInput.getE_s3RS() ) );
+
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "AREAland.R", String.valueOf( userInput.getAREAland_R() )  ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "AREAsea.R",  String.valueOf( userInput.getAREAsea_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "FRAClake.R", String.valueOf( userInput.getFRAClake_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "FRACfresh.R",  String.valueOf( userInput.getFRACfresh_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "FRACnatsoil.R", String.valueOf( userInput.getFRACnatsoil_R() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "FRACagsoil.R",  String.valueOf( userInput.getFRACagsoil_R() )) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "FRACothersoil.R", String.valueOf( userInput.getFRACothersoil_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "RAINrate.R",  String.valueOf( userInput.getRAINrate_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "TEMP.R",  String.valueOf( userInput.getTEMP_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "WINDspeed.R", String.valueOf( userInput.getWINDspeed_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "DEPTHlake.R",  String.valueOf( userInput.getDEPTHlake_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "DEPTHfreshwater.R", String.valueOf( userInput.getDEPTHfreshwater_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "FRACrun.R",   String.valueOf( userInput.getFRACrun_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "FRACinf.R",   String.valueOf( userInput.getFRACinf_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "EROSION.R",   String.valueOf( userInput.getEROSION_R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "SUSP.w0R",  String.valueOf( userInput.getSUSP_w0R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "SUSP.w1R",   String.valueOf( userInput.getSUSP_w1R() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "SUSP.w2R",   String.valueOf( userInput.getSUSP_w2R() ) ) ;
+
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "TOTAREAland.C",  String.valueOf( userInput.getTOTAREALand_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "TOTAREAsea.C",  String.valueOf( userInput.getTOTAREAsea_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "FRAClake.C",   String.valueOf( userInput.getFRAClake_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "FRACfresh.C",   String.valueOf( userInput.getFRACfresh_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "FRACnatsoil.C",   String.valueOf( userInput.getFRACnatsoil_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "FRACagsoil.C",   String.valueOf( userInput.getFRACagsoil_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "FRACothersoil.C",  String.valueOf( userInput.getFRACothersoil_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "RAINrate.C",   String.valueOf( userInput.getRAINrate_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "TEMP.C",   String.valueOf( userInput.getTEMP_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "WINDspeed.C",  String.valueOf( userInput.getWINDspeed_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "DEPTHlake.C",  String.valueOf( userInput.getDEPTHlake_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "DEPTHfreshwater.C", String.valueOf( userInput.getDEPTHfreshwater_C() ) ) ;
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "FRACrun.C", String.valueOf( userInput.getFRACrun_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "FRACinf.C", String.valueOf( userInput.getFRACinf_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "EROSION.C", String.valueOf( userInput.getEROSION_C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "SUSP.w0C", String.valueOf( userInput.getSUSP_w0C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "SUSP.w1C", String.valueOf( userInput.getSUSP_w1C() ) );
+		scenariosData.get( sceneName ).putLandscapeInfo("CONTINENTAL", "SUSP.w2C", String.valueOf( userInput.getSUSP_w2C() ) );
+
+		//load all available nanomaterials
+		//The nanomaterials (as the scenarios) must be re-loaded for the values that are not set by the user (in case of API call). 
+		loadNanomaterials();
+
+
+		//Replace with user values or from the API
+		//		for( String entry:nano.get(nanoName).keySet() ) 
+		//			nanoData.get(nanoName).put(entry, nano.get(nanoName).get(entry) );
+
+		input = new InputEngine( scenariosData.get( sceneName ), nanoData.get( nanoName ) );
+		environment = new RegionalEngine( input );
+		engine = new Engine( input, environment, nanoData.get( nanoName ), scenariosData.get( sceneName )	);
+		engine.build();		
+		
+		out = new output();
+		out.setAPIInfo(input, environment, engine, getNanoData(), sceneName, nanoName);
+	}
+	
+	public Map<String, Map<String, Map<String, Double> > > getMasses() { return out.masses; }
+	public Map<String, Map<String, Map<String, Double> > > getConcentrations() { return out.concentrations; }
+	public Map<String, Map<String, Map<String, Double> > > getFugacities() { return out.fugacities; }
+	public Map<String, Map<String, Map<String, Double> > > getTransport() { return out.transport; }
+
+	public Map<String, Map<String, Double> > getInflow() { return out.inflow; }
+	public Map<String, Map<String, Double> > getOutflow() { return out.outflow; }
+	public Map<String, Map<String, Double> > getRemoval() { return out.removal; }
+	public Map<String, Map<String, Double> > getFormation() { return out.formation; }
+	public Map<String, Map<String, Double> > getDegradation() { return out.degradation; }
+	public Map<String, Map<String, Double> > getEmission() { return out.emission; }
+
+	public Map<String, Double> getTotalD() { return out.totalD; }
+	public Map<String, Double> getTotalS() { return out.totalS; }
+	public Map<String, Double> getTotalA() { return out.totalA; }
+	public Map<String, Double> getTotalP() { return out.totalP; }
+	
 	public SimpleBox4NanoModel( Map<String, Map<String, String> > nano, Map<String, Scenario> scenarios, 
-			String scenario, String nanomaterial )
+			String scenario, String nanomaterial ) throws Exception
 	{	
 		sceneName = scenario;
 		nanoName = nanomaterial;
-		
+
 		//Load all scenarios
 		//The scenarios must be re-loaded for the values that are not set by the user (in case of API call). 
 		loadScenarios();
@@ -48,27 +143,6 @@ public class SimpleBox4NanoModel {
 		scenariosData.get( sceneName ).putSolidInfo("REGIONAL", "E.s2RS", scenarios.get( sceneName ).getSolidInfo( "REGIONAL").get("E.s2RS"));
 		scenariosData.get( sceneName ).putSolidInfo("REGIONAL", "E.s3RS", scenarios.get( sceneName ).getSolidInfo( "REGIONAL").get("E.s3RS"));
 
-		//Replace with user values or from the API
-		scenariosData.get( sceneName ).putSolidInfo("CONTINENTAL", "E.aRS",  scenarios.get( sceneName ).getSolidInfo( "CONTINENTAL").get("E.aCS") );
-		scenariosData.get( sceneName ).putSolidInfo("CONTINENTAL", "E.w0RS", scenarios.get( sceneName ).getSolidInfo( "CONTINENTAL").get("E.w0CS"));
-		scenariosData.get( sceneName ).putSolidInfo("CONTINENTAL", "E.w1RS", scenarios.get( sceneName ).getSolidInfo( "CONTINENTAL").get("E.w1CS"));
-		scenariosData.get( sceneName ).putSolidInfo("CONTINENTAL", "E.w2RS", scenarios.get( sceneName ).getSolidInfo( "CONTINENTAL").get("E.w2CS"));
-		scenariosData.get( sceneName ).putSolidInfo("CONTINENTAL", "E.s1RS", scenarios.get( sceneName ).getSolidInfo( "CONTINENTAL").get("E.s1CS"));
-		scenariosData.get( sceneName ).putSolidInfo("CONTINENTAL", "E.s2RS", scenarios.get( sceneName ).getSolidInfo( "CONTINENTAL").get("E.s2CS"));
-		scenariosData.get( sceneName ).putSolidInfo("CONTINENTAL", "E.s3RS", scenarios.get( sceneName ).getSolidInfo( "CONTINENTAL").get("E.s3CS"));
-
-		scenariosData.get( sceneName ).putSolidInfo("ARCTIC", "E.aAS",  scenarios.get( sceneName ).getSolidInfo( "ARCTIC").get("E.aAS") );
-		scenariosData.get( sceneName ).putSolidInfo("ARCTIC", "E.w2AS", scenarios.get( sceneName ).getSolidInfo( "ARCTIC").get("E.w2AS"));
-		scenariosData.get( sceneName ).putSolidInfo("ARCTIC", "E.sAS", scenarios.get( sceneName ).getSolidInfo( "ARCTIC").get("E.sAS"));
-
-		scenariosData.get( sceneName ).putSolidInfo("TROPICAL", "E.aTS",  scenarios.get( sceneName ).getSolidInfo( "TROPICAL").get("E.aTS") );
-		scenariosData.get( sceneName ).putSolidInfo("TROPICAL", "E.w2TS", scenarios.get( sceneName ).getSolidInfo( "TROPICAL").get("E.w2TS"));
-		scenariosData.get( sceneName ).putSolidInfo("TROPICAL", "E.sTS", scenarios.get( sceneName ).getSolidInfo( "TROPICAL").get("E.sTS"));
-
-		scenariosData.get( sceneName ).putSolidInfo("MODERATE", "E.aMS",  scenarios.get( sceneName ).getSolidInfo( "MODERATE").get("E.aMS") );
-		scenariosData.get( sceneName ).putSolidInfo("MODERATE", "E.w2MS", scenarios.get( sceneName ).getSolidInfo( "MODERATE").get("E.w2MS"));
-		scenariosData.get( sceneName ).putSolidInfo("MODERATE", "E.sMS", scenarios.get( sceneName ).getSolidInfo( "MODERATE").get("E.sMS"));
-		
 		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "AREAland.R",  scenarios.get( sceneName ).getLandscapeInfo( "REGIONAL").get("AREAland.R")  ) ;
 		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "AREAsea.R",  scenarios.get( sceneName ).getLandscapeInfo( "REGIONAL").get("AREAsea.R")  ) ;
 		scenariosData.get( sceneName ).putLandscapeInfo("REGIONAL", "FRAClake.R",   scenarios.get( sceneName ).getLandscapeInfo( "REGIONAL").get("FRAClake.R")  ) ;
@@ -110,7 +184,7 @@ public class SimpleBox4NanoModel {
 		//load all available nanomaterials
 		//The nanomaterials (as the scenarios) must be re-loaded for the values that are not set by the user (in case of API call). 
 		loadNanomaterials();
-		
+
 		//Replace with user values or from the API
 		for( String entry:nano.get(nanoName).keySet() ) 
 			nanoData.get(nanoName).put(entry, nano.get(nanoName).get(entry) );
@@ -120,7 +194,7 @@ public class SimpleBox4NanoModel {
 		engine = new Engine( input, environment, nanoData.get( nanoName ), scenariosData.get( sceneName )	);
 		engine.build();		
 	}	
-	
+
 	public InputEngine getInput() { return input; } 
 	public RegionalEngine getEnvironment() { return environment; } 
 	public Engine getEngine() { return engine; } 
@@ -130,9 +204,14 @@ public class SimpleBox4NanoModel {
 
 	public void loadScenarios(){
 		try {
-			ServletContext c = (ServletContext) Sessions.getCurrent().getWebApp().getNativeContext();
+//			ServletContext c = (ServletContext) Sessions.getCurrent().getWebApp().getNativeContext();
 			
-			XSSFWorkbook wb = new XSSFWorkbook( c.getResourceAsStream("/resources/templates/scenarios.xlsx") );
+//			String path = "C:/Users/nikol/git/SimpleBox4Nano/SimpleBox4Nano/src/main/webapp/resources/templates/scenarios.xlsx"; // SimpleBox4NanoModel.class.getClassLoader().getResourceAsStream("../webapp/resources/templates/scenarios.xlsx"
+//			FileInputStream fis=new FileInputStream(new File(path));  
+			
+			InputStream myWFS = Thread.currentThread().getContextClassLoader().getResourceAsStream("excel_files/scenarios.xlsx");
+			
+			XSSFWorkbook wb = new XSSFWorkbook( myWFS );			
 			XSSFSheet sheet = wb.getSheetAt(0);
 
 			//Get all scenarios names from 3rd row, 8th col to the end
@@ -214,7 +293,7 @@ public class SimpleBox4NanoModel {
 				for ( int i = 126; i < 143; i++) 
 					enviInfo.put( sheet.getRow( i ).getCell( 6 ).getStringCellValue() , String.valueOf( sheet.getRow( i ).getCell( iScenario ).getNumericCellValue() ) );
 				scenariosData.get( str ).insertEnviInfo( enviInfo );
-				
+
 				iScenario++;
 			}
 
@@ -223,13 +302,21 @@ public class SimpleBox4NanoModel {
 			ioe.printStackTrace();
 		}
 	}
-	
+
 	public void loadNanomaterials(){
 		try {	
-			
-			ServletContext c = (ServletContext) Sessions.getCurrent().getWebApp().getNativeContext();
 
-			XSSFWorkbook wb = new XSSFWorkbook( c.getResourceAsStream("/resources/templates/nanomaterials.xlsx") );
+	//		ServletContext c = (ServletContext) Sessions.getCurrent().getWebApp().getNativeContext();
+
+			//String path = "C:/Users/nikol/git/SimpleBox4Nano/SimpleBox4Nano/src/main/webapp/resources/templates/nanomaterials.xlsx"; // SimpleBox4NanoModel.class.getClassLoader().getResourceAsStream("../webapp/resources/templates/scenarios.xlsx"
+			//FileInputStream fis=new FileInputStream(new File(path));  
+			
+			InputStream myWFS = Thread.currentThread().getContextClassLoader().getResourceAsStream("excel_files/nanomaterials.xlsx");
+			
+			XSSFWorkbook wb = new XSSFWorkbook( myWFS );
+				
+			
+	//		XSSFWorkbook wb = new XSSFWorkbook( this.getClass().getResourceAsStream("/resources/templates/nanomaterials.xlsx") );
 			XSSFSheet sheet = wb.getSheetAt(0);
 			Iterator<Row> itr = sheet.iterator();   
 

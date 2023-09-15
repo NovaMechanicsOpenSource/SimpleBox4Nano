@@ -14,54 +14,54 @@ public class SimpleBox4NanoApiResponse {
 	Map<String, Map<String, Map<String, Double> > > masses;
 
 	@Getter @Setter
-	@ApiModelProperty(value="Thracheobronchial deposited dose (mg)")
+	@ApiModelProperty(value="Concentrations")
 	Map<String, Map<String, Map<String, Double> > > concentrations;
 
 	@Getter @Setter
-	@ApiModelProperty(value="Head airways deposited dose (mg)")
+	@ApiModelProperty(value="Fugacities")
 	Map<String, Map<String, Map<String, Double> > > fugacities;
 
 	@Getter @Setter
-	@ApiModelProperty(value="Head airways deposited dose (mg)")
+	@ApiModelProperty(value="Inflow rates")
 	Map<String, Map<String, Double> > inflow;
 
 	@Getter @Setter
-	@ApiModelProperty(value="Head airways deposited dose (mg)")
+	@ApiModelProperty(value="Outflow rates")
 	Map<String, Map<String, Double> > outflow;
 
 	@Getter @Setter
-	@ApiModelProperty(value="Head airways deposited dose (mg)")
+	@ApiModelProperty(value="Removal mass flows")
 	Map<String, Map<String, Double> > removal;
 
 	@Getter @Setter
-	@ApiModelProperty(value="Head airways deposited dose (mg)")
+	@ApiModelProperty(value="Formation")
 	Map<String, Map<String, Double> > formation;
 
 	@Getter @Setter
-	@ApiModelProperty(value="Head airways deposited dose (mg)")
+	@ApiModelProperty(value="Degradation")
 	Map<String, Map<String, Double> > degradation;
 
 	@Getter @Setter
-	@ApiModelProperty(value="Head airways deposited dose (mg)")
+	@ApiModelProperty(value="Emissions")
 	Map<String, Map<String, Double> > emission;
 	
 	@Getter @Setter
-	@ApiModelProperty(value="The masses ")
+	@ApiModelProperty(value="Transport")
 	Map<String, Map<String, Map<String, Double> > > transport;
 
 	@Getter @Setter
-	@ApiModelProperty(value="The masses ")
+	@ApiModelProperty(value="Total masses")
 	Map<String, Double> totalD;
 
 	@Getter @Setter
-	@ApiModelProperty(value="The masses ")
+	@ApiModelProperty(value="Total S")
 	Map<String, Double> totalS;
 
 	@Getter @Setter
-	@ApiModelProperty(value="The masses ")
+	@ApiModelProperty(value="Total A")
 	Map<String, Double> totalA;
 
 	@Getter @Setter
-	@ApiModelProperty(value="The masses ")
+	@ApiModelProperty(value="Total P")
 	Map<String, Double> totalP;
 }

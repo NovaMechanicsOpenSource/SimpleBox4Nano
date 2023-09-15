@@ -246,6 +246,12 @@ public class output extends SelectorComposer<Window> {
 	Map<String, Double> totalA = new HashMap<String, Double>();
 	Map<String, Double> totalP = new HashMap<String, Double>();
 
+	Map<String, Double> table1API = new HashMap<String, Double>();
+	Map<String, Double> table2API = new HashMap<String, Double>();
+	Map<String, Double> table3API = new HashMap<String, Double>();
+	Map<String, Double> tableTotalAPI = new HashMap<String, Double>();
+
+	
 	double totalReg, totalCont, totalMod, totalArct, totalTrop;
 	String scenarioName = null;
 	String nanomaterialName = null;
@@ -283,10 +289,11 @@ public class output extends SelectorComposer<Window> {
 		buildTotals();
 
 		//build the tables for the NMs only.
-		buildTable1();
-		buildTable2();
-		buildTable3();
-		buildTableTotal();
+		buildTable1API();
+		buildTable2API();
+		buildTable3API();
+		buildTableTotalAPI();
+		buildTotals();
 	}
 
 	@Override
@@ -1852,7 +1859,525 @@ public class output extends SelectorComposer<Window> {
 		imgResB.setContent( bimg );		
 	}
 
+	
+	void buildTable1API() {
 
+		table1API.put("airReg1",  				
+				(engine.getMassMol( 1 ) + engine.getMassMol( 4 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("REGIONAL", "VOLUME.aR") + environment.getEnvProps("REGIONAL", "VOLUME.cwR") )
+				);
+		
+		table1API.put("airCon1",  				
+				(engine.getMassMol( 44 ) + engine.getMassMol( 47 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("CONTINENTAL", "VOLUME.aC") + environment.getEnvProps("CONTINENTAL", "VOLUME.cwC") )  
+				);
+
+		table1API.put("airMod1",  				
+				(engine.getMassMol( 87 ) + engine.getMassMol( 90 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("MODERATE", "VOLUME.aM") + environment.getEnvProps("MODERATE", "VOLUME.cwM") )    
+				);
+
+		table1API.put("airArc1",  				
+				(engine.getMassMol( 110 ) + engine.getMassMol( 113 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("ARCTIC", "VOLUME.aA") + environment.getEnvProps("ARCTIC", "VOLUME.cwA") )  
+				);
+		
+		table1API.put("airTro1",  				
+				(engine.getMassMol( 133 ) + engine.getMassMol( 136 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("TROPICAL", "VOLUME.aT") + environment.getEnvProps("TROPICAL", "VOLUME.cwT") )  
+				);
+
+
+		table1API.put("freshWatLReg1", engine.getConcentration( 8 )*input.getSubstancesData("Molweight") );
+		table1API.put("freshWatLCon1", engine.getConcentration( 51 )*input.getSubstancesData("Molweight") );
+	
+		table1API.put("freshWatLMod1", null );
+		table1API.put("freshWatLArc1", null );
+		table1API.put("freshWatLTro1", null );
+	
+		table1API.put("freshWatLSReg1", engine.getConcentration( 20 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.sdR") + environment.getEnvProps("REGIONAL", "FRACs.sdR")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )  
+				);
+
+		table1API.put("freshWatLSCon1", engine.getConcentration( 63 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.sdC") + environment.getEnvProps("CONTINENTAL", "FRACs.sdC")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table1API.put("freshWatLSMod1", null );
+		table1API.put("freshWatLSArc1", null );
+		table1API.put("freshWatLSTro1", null );
+
+		table1API.put("freshWatReg1", engine.getConcentration( 12 )*input.getSubstancesData("Molweight") );
+		table1API.put("freshWatCon1",engine.getConcentration( 55 )*input.getSubstancesData("Molweight") );		
+		
+		table1API.put("freshWatMod1", null );
+		table1API.put("freshWatArc1", null );
+		table1API.put("freshWatTro1", null );
+
+		table1API.put("freshWatSedReg1",engine.getConcentration( 24 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.sdR") + environment.getEnvProps("REGIONAL", "FRACs.sdR")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table1API.put("freshWatSedCon1",engine.getConcentration( 67 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.sdR") + environment.getEnvProps("REGIONAL", "FRACs.sdR")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table1API.put("freshWatSedMod1", null );
+		table1API.put("freshWatSedArc1", null );
+		table1API.put("freshWatSedTro1", null );
+
+		table1API.put("surfSeaOcReg1", engine.getConcentration( 16  )*input.getSubstancesData("Molweight") );
+		table1API.put("surfSeaOcCon1", engine.getConcentration( 59  )*input.getSubstancesData("Molweight") );
+		table1API.put("surfSeaOcMod1", engine.getConcentration( 94  )*input.getSubstancesData("Molweight") );
+		table1API.put("surfSeaOcArc1", engine.getConcentration( 117  )*input.getSubstancesData("Molweight") );
+		table1API.put("surfSeaOcTro1", engine.getConcentration( 140  )*input.getSubstancesData("Molweight") );
+
+		table1API.put("deepSeaOcReg1", null );
+		table1API.put("deepSeaOcCon1", null );
+
+		table1API.put("deepSeaOcMod1", engine.getConcentration( 98  )*input.getSubstancesData("Molweight") );
+		table1API.put("deepSeaOcArc1", engine.getConcentration( 121  )*input.getSubstancesData("Molweight") );
+		table1API.put("deepSeaOcTro1", engine.getConcentration( 144  )*input.getSubstancesData("Molweight") );
+
+		table1API.put("marSedReg1", engine.getConcentration( 28 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.sdC") + environment.getEnvProps("CONTINENTAL", "FRACs.sdC")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table1API.put("marSedCon1", engine.getConcentration( 71 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.sdC") + environment.getEnvProps("CONTINENTAL", "FRACs.sdC")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table1API.put("marSedMod1", engine.getConcentration( 102 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("MODERATE", "FRACw.sdM") + environment.getEnvProps("MODERATE", "FRACs.sdM")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+	
+		table1API.put("marSedArc1", engine.getConcentration( 125 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("ARCTIC", "FRACw.sdA") + environment.getEnvProps("ARCTIC", "FRACs.sdA")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table1API.put("marSedTro1", engine.getConcentration( 148 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("TROPICAL", "FRACw.sdT") + environment.getEnvProps("TROPICAL", "FRACs.sdT")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table1API.put("natSoilReg1", engine.getConcentration( 32 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.s1R") + (1. -environment.getEnvProps("REGIONAL", "FRACa.s1R")-
+						environment.getEnvProps("REGIONAL", "FRACw.s1R"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table1API.put("natSoilCon1", engine.getConcentration( 75 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.s1C") + (1. -environment.getEnvProps("CONTINENTAL", "FRACa.s1C")-
+						environment.getEnvProps("CONTINENTAL", "FRACw.s1C"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+		
+		table1API.put("natSoilMod1", null );
+		table1API.put("natSoilArc1", null );
+		table1API.put("natSoilTro1", null );
+
+		table1API.put("agriSoilReg1", engine.getConcentration( 36 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.s2R") + (1. -environment.getEnvProps("REGIONAL", "FRACa.s2R")-
+						environment.getEnvProps("REGIONAL", "FRACw.s2R"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table1API.put("agriSoilCon1", engine.getConcentration( 79 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.s2C") + (1. -environment.getEnvProps("CONTINENTAL", "FRACa.s2C")-
+						environment.getEnvProps("CONTINENTAL", "FRACw.s2C"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+		
+		table1API.put("agriSoilMod1", null );
+		table1API.put("agriSoilArc1", null );
+		table1API.put("agriSoilTro1", null );
+
+		table1API.put("otherSoilReg1", engine.getConcentration( 40 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.s3R") + (1. -environment.getEnvProps("REGIONAL", "FRACa.s3R")-
+						environment.getEnvProps("REGIONAL", "FRACw.s3R") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+		
+		table1API.put("otherSoilCom1", engine.getConcentration( 83 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.s3C") + (1. -environment.getEnvProps("CONTINENTAL", "FRACa.s3C")-
+						environment.getEnvProps("CONTINENTAL", "FRACw.s3C") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+
+
+		table1API.put("otherSoilMod1", engine.getConcentration( 106 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("MODERATE", "FRACw.sM") + (1. -environment.getEnvProps("MODERATE", "FRACa.sM")-
+						environment.getEnvProps("MODERATE", "FRACw.sM") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+
+		table1API.put("otherSoilArc1", engine.getConcentration( 129 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("ARCTIC", "FRACw.sA") + (1. -environment.getEnvProps("ARCTIC", "FRACa.sA")-
+						environment.getEnvProps("ARCTIC", "FRACw.sA") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+
+		table1API.put("otherSoilTro1", engine.getConcentration( 152 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("TROPICAL", "FRACw.sT") + (1. -environment.getEnvProps("TROPICAL", "FRACa.sT")-
+						environment.getEnvProps("TROPICAL", "FRACw.sT") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+	}
+	
+
+	void buildTable2API() {
+
+		table2API.put("airReg2",  				
+				(engine.getMassMol( 2 ) + engine.getMassMol( 5 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("REGIONAL", "VOLUME.aR") + environment.getEnvProps("REGIONAL", "VOLUME.cwR") )
+				);
+		
+		table2API.put("airCon2",  				
+				(engine.getMassMol( 45 ) + engine.getMassMol( 48 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("CONTINENTAL", "VOLUME.aC") + environment.getEnvProps("CONTINENTAL", "VOLUME.cwC") )  
+				);
+
+		table2API.put("airMod2",  				
+				(engine.getMassMol( 88 ) + engine.getMassMol( 91 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("MODERATE", "VOLUME.aM") + environment.getEnvProps("MODERATE", "VOLUME.cwM") )    
+				);
+
+		table2API.put("airArc2",  				
+				(engine.getMassMol( 111 ) + engine.getMassMol( 114 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("ARCTIC", "VOLUME.aA") + environment.getEnvProps("ARCTIC", "VOLUME.cwA") )  
+				);
+		
+		table2API.put("airTro2",  				
+				(engine.getMassMol( 134 ) + engine.getMassMol( 137 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("TROPICAL", "VOLUME.aT") + environment.getEnvProps("TROPICAL", "VOLUME.cwT") )  
+				);
+
+
+		table2API.put("freshWatLReg2", engine.getConcentration( 9 )*input.getSubstancesData("Molweight") );
+		table2API.put("freshWatLCon2", engine.getConcentration( 52 )*input.getSubstancesData("Molweight") );
+	
+		table2API.put("freshWatLMod2", null );
+		table2API.put("freshWatLArc2", null );
+		table2API.put("freshWatLTro2", null );
+	
+		table2API.put("freshWatLSReg2", engine.getConcentration( 21 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.sdR") + environment.getEnvProps("REGIONAL", "FRACs.sdR")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )  
+				);
+
+		table2API.put("freshWatLSCon2", engine.getConcentration( 64 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.sdC") + environment.getEnvProps("CONTINENTAL", "FRACs.sdC")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table2API.put("freshWatLSMod2", null );
+		table2API.put("freshWatLSArc2", null );
+		table2API.put("freshWatLSTro2", null );
+
+		table2API.put("freshWatReg2", engine.getConcentration( 13 )*input.getSubstancesData("Molweight") );
+		table2API.put("freshWatCon2",engine.getConcentration( 56 )*input.getSubstancesData("Molweight") );
+
+		table2API.put("freshWatMod2", null );
+		table2API.put("freshWatArc2", null );
+		table2API.put("freshWatTro2", null );
+
+		table2API.put("freshWatSedReg2",engine.getConcentration( 25 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.sdR") + environment.getEnvProps("REGIONAL", "FRACs.sdR")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table2API.put("freshWatSedCon2",engine.getConcentration( 68 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.sdR") + environment.getEnvProps("REGIONAL", "FRACs.sdR")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table2API.put("freshWatSedMod2", null );
+		table2API.put("freshWatSedArc2", null );
+		table2API.put("freshWatSedTro2", null );
+
+		table2API.put("surfSeaOcReg2", engine.getConcentration( 17  )*input.getSubstancesData("Molweight") );
+		table2API.put("surfSeaOcCon2", engine.getConcentration( 60  )*input.getSubstancesData("Molweight") );
+		table2API.put("surfSeaOcMod2", engine.getConcentration( 95  )*input.getSubstancesData("Molweight") );
+		table2API.put("surfSeaOcArc2", engine.getConcentration( 118  )*input.getSubstancesData("Molweight") );
+		table2API.put("surfSeaOcTro2", engine.getConcentration( 141  )*input.getSubstancesData("Molweight") );
+
+		table2API.put("deepSeaOcReg2", null );
+		table2API.put("deepSeaOcCon2", null );
+
+		table2API.put("deepSeaOcMod2", engine.getConcentration( 99  )*input.getSubstancesData("Molweight") );
+		table2API.put("deepSeaOcArc2", engine.getConcentration( 122  )*input.getSubstancesData("Molweight") );
+		table2API.put("deepSeaOcTro2", engine.getConcentration( 145  )*input.getSubstancesData("Molweight") );
+
+		table2API.put("marSedReg2", engine.getConcentration( 29 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.sdC") + environment.getEnvProps("CONTINENTAL", "FRACs.sdC")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table2API.put("marSedCon2", engine.getConcentration( 72 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.sdC") + environment.getEnvProps("CONTINENTAL", "FRACs.sdC")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table2API.put("marSedMod2", engine.getConcentration( 103 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("MODERATE", "FRACw.sdM") + environment.getEnvProps("MODERATE", "FRACs.sdM")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+	
+		table2API.put("marSedArc2", engine.getConcentration( 126 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("ARCTIC", "FRACw.sdA") + environment.getEnvProps("ARCTIC", "FRACs.sdA")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table2API.put("marSedTro2", engine.getConcentration( 149 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("TROPICAL", "FRACw.sdT") + environment.getEnvProps("TROPICAL", "FRACs.sdT")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table2API.put("natSoilReg2", engine.getConcentration( 33 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.s1R") + (1. -environment.getEnvProps("REGIONAL", "FRACa.s1R")-
+						environment.getEnvProps("REGIONAL", "FRACw.s1R"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table2API.put("natSoilCon2", engine.getConcentration( 76 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.s1C") + (1. -environment.getEnvProps("CONTINENTAL", "FRACa.s1C")-
+						environment.getEnvProps("CONTINENTAL", "FRACw.s1C"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+		
+		table2API.put("natSoilMod2", null );
+		table2API.put("natSoilArc2", null );
+		table2API.put("natSoilTro2", null );
+
+		table2API.put("agriSoilReg2", engine.getConcentration( 37 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.s2R") + (1. -environment.getEnvProps("REGIONAL", "FRACa.s2R")-
+						environment.getEnvProps("REGIONAL", "FRACw.s2R"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table2API.put("agriSoilCon2", engine.getConcentration( 80 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.s2C") + (1. -environment.getEnvProps("CONTINENTAL", "FRACa.s2C")-
+						environment.getEnvProps("CONTINENTAL", "FRACw.s2C"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+		
+		table2API.put("agriSoilMod2", null );
+		table2API.put("agriSoilArc2", null );
+		table2API.put("agriSoilTro2", null );
+
+		table2API.put("otherSoilReg2", engine.getConcentration( 41 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.s3R") + (1. -environment.getEnvProps("REGIONAL", "FRACa.s3R")-
+						environment.getEnvProps("REGIONAL", "FRACw.s3R") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+		
+		table2API.put("otherSoilCom2", engine.getConcentration( 84 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.s3C") + (1. -environment.getEnvProps("CONTINENTAL", "FRACa.s3C")-
+						environment.getEnvProps("CONTINENTAL", "FRACw.s3C") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+
+
+		table2API.put("otherSoilMod2", engine.getConcentration( 107 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("MODERATE", "FRACw.sM") + (1. -environment.getEnvProps("MODERATE", "FRACa.sM")-
+						environment.getEnvProps("MODERATE", "FRACw.sM") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+
+		table2API.put("otherSoilArc2", engine.getConcentration( 130 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("ARCTIC", "FRACw.sA") + (1. -environment.getEnvProps("ARCTIC", "FRACa.sA")-
+						environment.getEnvProps("ARCTIC", "FRACw.sA") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+
+		table2API.put("otherSoilTro2", engine.getConcentration( 153 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("TROPICAL", "FRACw.sT") + (1. -environment.getEnvProps("TROPICAL", "FRACa.sT")-
+						environment.getEnvProps("TROPICAL", "FRACw.sT") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+	}
+	
+	void buildTable3API() {
+
+		table3API.put("airReg3",  				
+				(engine.getMassMol( 3 ) + engine.getMassMol( 6 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("REGIONAL", "VOLUME.aR") + environment.getEnvProps("REGIONAL", "VOLUME.cwR") )
+				);
+		
+		table3API.put("airCon3",  				
+				(engine.getMassMol( 46 ) + engine.getMassMol( 49 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("CONTINENTAL", "VOLUME.aC") + environment.getEnvProps("CONTINENTAL", "VOLUME.cwC") )  
+				);
+
+		table3API.put("airMod3",  				
+				(engine.getMassMol( 89 ) + engine.getMassMol( 92 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("MODERATE", "VOLUME.aM") + environment.getEnvProps("MODERATE", "VOLUME.cwM") )    
+				);
+
+		table3API.put("airArc3",  				
+				(engine.getMassMol( 112 ) + engine.getMassMol( 115 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("ARCTIC", "VOLUME.aA") + environment.getEnvProps("ARCTIC", "VOLUME.cwA") )  
+				);
+		
+		table3API.put("airTro3",  				
+				(engine.getMassMol( 135 ) + engine.getMassMol( 138 ))*(input.getSubstancesData("Molweight")*1000. )/
+				(environment.getEnvProps("TROPICAL", "VOLUME.aT") + environment.getEnvProps("TROPICAL", "VOLUME.cwT") )  
+				);
+
+
+		table3API.put("freshWatLReg3", engine.getConcentration( 10 )*input.getSubstancesData("Molweight") );
+		table3API.put("freshWatLCon3", engine.getConcentration( 53 )*input.getSubstancesData("Molweight") );
+	
+		table3API.put("freshWatLMod3", null );
+		table3API.put("freshWatLArc3", null );
+		table3API.put("freshWatLTro3", null );
+	
+		table3API.put("freshWatLSReg3", engine.getConcentration( 22 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.sdR") + environment.getEnvProps("REGIONAL", "FRACs.sdR")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )  
+				);
+
+		table3API.put("freshWatLSCon3", engine.getConcentration( 65 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.sdC") + environment.getEnvProps("CONTINENTAL", "FRACs.sdC")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table3API.put("freshWatLSMod3", null );
+		table3API.put("freshWatLSArc3", null );
+		table3API.put("freshWatLSTro3", null );
+
+		table3API.put("freshWatReg3", engine.getConcentration( 14 )*input.getSubstancesData("Molweight") );
+		table3API.put("freshWatCon3",engine.getConcentration( 57 )*input.getSubstancesData("Molweight") );
+
+		table3API.put("freshWatMod3", null );
+		table3API.put("freshWatArc3", null );
+		table3API.put("freshWatTro3", null );
+
+		table3API.put("freshWatSedReg3",engine.getConcentration( 26 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.sdR") + environment.getEnvProps("REGIONAL", "FRACs.sdR")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table3API.put("freshWatSedCon3",engine.getConcentration( 69 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.sdR") + environment.getEnvProps("REGIONAL", "FRACs.sdR")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table3API.put("freshWatSedMod3", null );
+		table3API.put("freshWatSedArc3", null );
+		table3API.put("freshWatSedTro3", null );
+
+		table3API.put("surfSeaOcReg3", engine.getConcentration( 18  )*input.getSubstancesData("Molweight") );
+		table3API.put("surfSeaOcCon3", engine.getConcentration( 61  )*input.getSubstancesData("Molweight") );
+		table3API.put("surfSeaOcMod3", engine.getConcentration( 96  )*input.getSubstancesData("Molweight") );
+		table3API.put("surfSeaOcArc3", engine.getConcentration( 119  )*input.getSubstancesData("Molweight") );
+		table3API.put("surfSeaOcTro3", engine.getConcentration( 142  )*input.getSubstancesData("Molweight") );
+
+		table3API.put("deepSeaOcReg3", null );
+		table3API.put("deepSeaOcCon3", null );
+
+		table3API.put("deepSeaOcMod3", engine.getConcentration( 100  )*input.getSubstancesData("Molweight") );
+		table3API.put("deepSeaOcArc3", engine.getConcentration( 123  )*input.getSubstancesData("Molweight") );
+		table3API.put("deepSeaOcTro3", engine.getConcentration( 146  )*input.getSubstancesData("Molweight") );
+
+		table3API.put("marSedReg3", engine.getConcentration( 30 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.sdC") + environment.getEnvProps("CONTINENTAL", "FRACs.sdC")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table3API.put("marSedCon3", engine.getConcentration( 73 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.sdC") + environment.getEnvProps("CONTINENTAL", "FRACs.sdC")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table3API.put("marSedMod3", engine.getConcentration( 104 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("MODERATE", "FRACw.sdM") + environment.getEnvProps("MODERATE", "FRACs.sdM")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+	
+		table3API.put("marSedArc3", engine.getConcentration( 127 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("ARCTIC", "FRACw.sdA") + environment.getEnvProps("ARCTIC", "FRACs.sdA")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table3API.put("marSedTro3", engine.getConcentration( 150 )*(input.getSubstancesData("Molweight")*1000. )/
+				(1000.*environment.getEnvProps("TROPICAL", "FRACw.sdT") + environment.getEnvProps("TROPICAL", "FRACs.sdT")*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table3API.put("natSoilReg3", engine.getConcentration( 34 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.s1R") + (1. -environment.getEnvProps("REGIONAL", "FRACa.s1R")-
+						environment.getEnvProps("REGIONAL", "FRACw.s1R"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table3API.put("natSoilCon3", engine.getConcentration( 77 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.s1C") + (1. -environment.getEnvProps("CONTINENTAL", "FRACa.s1C")-
+						environment.getEnvProps("CONTINENTAL", "FRACw.s1C"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+		
+		table3API.put("natSoilMod3", null );
+		table3API.put("natSoilArc3", null );
+		table3API.put("natSoilTro3", null );
+
+		table3API.put("agriSoilReg3", engine.getConcentration( 38 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.s2R") + (1. -environment.getEnvProps("REGIONAL", "FRACa.s2R")-
+						environment.getEnvProps("REGIONAL", "FRACw.s2R"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+
+		table3API.put("agriSoilCon3", engine.getConcentration( 81 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.s2C") + (1. -environment.getEnvProps("CONTINENTAL", "FRACa.s2C")-
+						environment.getEnvProps("CONTINENTAL", "FRACw.s2C"))*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+		
+		table3API.put("agriSoilMod3", null );
+		table3API.put("agriSoilArc3", null );
+		table3API.put("agriSoilTro3", null );
+
+		table3API.put("otherSoilReg3", engine.getConcentration( 42 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("REGIONAL", "FRACw.s3R") + (1. -environment.getEnvProps("REGIONAL", "FRACa.s3R")-
+						environment.getEnvProps("REGIONAL", "FRACw.s3R") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") ) 
+				);
+		
+		table3API.put("otherSoilCom3", engine.getConcentration( 85 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("CONTINENTAL", "FRACw.s3C") + (1. -environment.getEnvProps("CONTINENTAL", "FRACa.s3C")-
+						environment.getEnvProps("CONTINENTAL", "FRACw.s3C") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+
+
+		table3API.put("otherSoilMod3", engine.getConcentration( 108 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("MODERATE", "FRACw.sM") + (1. -environment.getEnvProps("MODERATE", "FRACa.sM")-
+						environment.getEnvProps("MODERATE", "FRACw.sM") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+
+		table3API.put("otherSoilArc3", engine.getConcentration( 131 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("ARCTIC", "FRACw.sA") + (1. -environment.getEnvProps("ARCTIC", "FRACa.sA")-
+						environment.getEnvProps("ARCTIC", "FRACw.sA") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+
+		table3API.put("otherSoilTro3", engine.getConcentration( 154 )*(input.getSubstancesData("Molweight")*1000. )/ 
+				(1000.*environment.getEnvProps("TROPICAL", "FRACw.sT") + (1. -environment.getEnvProps("TROPICAL", "FRACa.sT")-
+						environment.getEnvProps("TROPICAL", "FRACw.sT") )*
+						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
+				);
+	}
+
+	
 	void buildTable1() 
 	{
 		Locale locale = Locale.ENGLISH;
@@ -2061,7 +2586,6 @@ public class output extends SelectorComposer<Window> {
 						environment.getEnvProps("TROPICAL", "FRACw.sT") )*
 						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
 				) );		
-
 	}
 
 	void buildTable2() 
@@ -2483,6 +3007,83 @@ public class output extends SelectorComposer<Window> {
 						environment.getEnvProps("TROPICAL", "FRACw.sT") )*
 						input.getLandscapeSettings("ALL-SCALE", "RHOsolid") )
 				) );
+	}
+	
+	
+	void buildTableTotalAPI() 
+	{
+		
+		tableTotalAPI.put("airRegT", table1API.get("airReg1") + table2API.get("airReg2") + table3API.get("airReg3") );
+		tableTotalAPI.put("airConT", table1API.get("airCon1") + table2API.get("airCon2") + table3API.get("airCon3") );
+		tableTotalAPI.put("airModT", table1API.get("airMod1") + table2API.get("airMod2") + table3API.get("airMod3") );
+		tableTotalAPI.put("airArcT", table1API.get("airArc1") + table2API.get("airArc2") + table3API.get("airArc3") );
+		tableTotalAPI.put("airTroT", table1API.get("airTro1") + table2API.get("airTro2") + table3API.get("airTro3") );
+		tableTotalAPI.put("freshWatLRegT", table1API.get("freshWatLReg1") + table2API.get("freshWatLReg2") + table3API.get("freshWatLReg3") );
+		tableTotalAPI.put("freshWatLConT", table1API.get("freshWatLCon1") + table2API.get("freshWatLCon2") + table3API.get("freshWatLCon3") );
+
+		tableTotalAPI.put("freshWatLModT", null );
+		tableTotalAPI.put("freshWatLArcT", null );
+		tableTotalAPI.put("freshWatLTroT", null );
+
+		tableTotalAPI.put("freshWatLSRegT", table1API.get("freshWatLSReg1") + table2API.get("freshWatLSReg2") + table3API.get("freshWatLSReg3") );
+		tableTotalAPI.put("freshWatLSConT", table1API.get("freshWatLSCon1") + table2API.get("freshWatLSCon2") + table3API.get("freshWatLSCon3") );
+
+		tableTotalAPI.put("freshWatLSModT", null );
+		tableTotalAPI.put("freshWatLSArcT", null );
+		tableTotalAPI.put("freshWatLSTroT", null );
+
+		tableTotalAPI.put("freshWatRegT", table1API.get("freshWatReg1") + table2API.get("freshWatReg2") + table3API.get("freshWatReg3") );
+		tableTotalAPI.put("freshWatConT", table1API.get("freshWatCon1") + table2API.get("freshWatCon2") + table3API.get("freshWatCon3") );
+
+		tableTotalAPI.put("freshWatModT", null );
+		tableTotalAPI.put("freshWatArcT", null );
+		tableTotalAPI.put("freshWatTroT", null );
+
+		tableTotalAPI.put("freshWatSedRegT", table1API.get("freshWatSedReg1") + table2API.get("freshWatSedReg2") + table3API.get("freshWatSedReg3") );
+		tableTotalAPI.put("freshWatSedConT", table1API.get("freshWatSedCon1") + table2API.get("freshWatSedCon2") + table3API.get("freshWatSedCon3") );
+
+		tableTotalAPI.put("freshWatSedModT", null );
+		tableTotalAPI.put("freshWatSedArcT", null );
+		tableTotalAPI.put("freshWatSedTroT", null );
+
+		tableTotalAPI.put("surfSeaOcRegT", table1API.get("surfSeaOcReg1") + table2API.get("surfSeaOcReg2") + table3API.get("surfSeaOcReg3") );
+		tableTotalAPI.put("surfSeaOcConT", table1API.get("surfSeaOcCon1") + table2API.get("surfSeaOcCon2") + table3API.get("surfSeaOcCon3") );
+		tableTotalAPI.put("surfSeaOcModT", table1API.get("surfSeaOcMod1") + table2API.get("surfSeaOcMod2") + table3API.get("surfSeaOcMod3") );
+		tableTotalAPI.put("surfSeaOcArcT", table1API.get("surfSeaOcArc1") + table2API.get("surfSeaOcArc2") + table3API.get("surfSeaOcArc3") );
+		tableTotalAPI.put("surfSeaOcTroT", table1API.get("surfSeaOcTro1") + table2API.get("surfSeaOcTro2") + table3API.get("surfSeaOcTro3") );
+
+		tableTotalAPI.put("deepSeaOcRegT", null );
+		tableTotalAPI.put("freshWatSedTroT", null );
+
+		tableTotalAPI.put("deepSeaOcModT", table1API.get("deepSeaOcMod1") + table2API.get("deepSeaOcMod2") + table3API.get("deepSeaOcMod3") );
+		tableTotalAPI.put("deepSeaOcArcT", table1API.get("deepSeaOcArc1") + table2API.get("deepSeaOcArc2") + table3API.get("deepSeaOcArc3") );
+		tableTotalAPI.put("deepSeaOcTroT", table1API.get("deepSeaOcTro1") + table2API.get("deepSeaOcTro2") + table3API.get("deepSeaOcTro3") );
+
+		tableTotalAPI.put("marSedRegT", table1API.get("marSedReg1") + table2API.get("marSedReg2") + table3API.get("marSedReg3") );
+		tableTotalAPI.put("marSedConT", table1API.get("marSedCon1") + table2API.get("marSedCon2") + table3API.get("marSedCon3") );
+		tableTotalAPI.put("marSedModT", table1API.get("marSedMod1") + table2API.get("marSedMod2") + table3API.get("marSedMod3") );
+		tableTotalAPI.put("marSedArcT", table1API.get("marSedArc1") + table2API.get("marSedArc2") + table3API.get("marSedArc3") );
+		tableTotalAPI.put("marSedTroT", table1API.get("marSedTro1") + table2API.get("marSedTro2") + table3API.get("marSedTro3") );
+
+		tableTotalAPI.put("natSoilRegT", table1API.get("natSoilReg1") + table2API.get("natSoilReg2") + table3API.get("natSoilReg3") );
+		tableTotalAPI.put("natSoilConT", table1API.get("natSoilCon1") + table2API.get("natSoilCon2") + table3API.get("natSoilCon3") );
+
+		tableTotalAPI.put("natSoilModT", null );
+		tableTotalAPI.put("natSoilArcT", null );
+		tableTotalAPI.put("natSoilTroT", null );
+
+		tableTotalAPI.put("agriSoilRegT", table1API.get("agriSoilReg1") + table2API.get("agriSoilReg2") + table3API.get("agriSoilReg3") );
+		tableTotalAPI.put("agriSoilConT", table1API.get("agriSoilCon1") + table2API.get("agriSoilCon2") + table3API.get("agriSoilCon3") );
+
+		tableTotalAPI.put("agriSoilModT", null );
+		tableTotalAPI.put("agriSoilArcT", null );
+		tableTotalAPI.put("agriSoilTroT", null );
+
+		tableTotalAPI.put("otherSoilRegT", table1API.get("otherSoilReg1") + table2API.get("otherSoilReg2") + table3API.get("otherSoilReg3") );
+		tableTotalAPI.put("otherSoilComT", table1API.get("otherSoilCom1") + table2API.get("otherSoilCom2") + table3API.get("otherSoilCom3") );
+		tableTotalAPI.put("otherSoilModT", table1API.get("otherSoilMod1") + table2API.get("otherSoilMod2") + table3API.get("otherSoilMod3") );
+		tableTotalAPI.put("otherSoilArcT", table1API.get("otherSoilArc1") + table2API.get("otherSoilArc2") + table3API.get("otherSoilArc3") );
+		tableTotalAPI.put("otherSoilTroT", table1API.get("otherSoilTro1") + table2API.get("otherSoilTro2") + table3API.get("otherSoilTro3") );
 	}
 
 	void buildTableTotal() 

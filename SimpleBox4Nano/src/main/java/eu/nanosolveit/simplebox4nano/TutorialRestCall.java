@@ -27,7 +27,7 @@ public class TutorialRestCall extends SelectorComposer<Window>{
 		win = comp;	
 		
 		try {
-			tutorial.setContent( RESTClient.getTutorial("SimpleBox4Nano") ) ;
+			tutorial.setContent( RESTClient.getTutorial("SimpleBox4Nano_NanoSolveIT") ) ;
 		}
 		catch(Exception e)
 		{

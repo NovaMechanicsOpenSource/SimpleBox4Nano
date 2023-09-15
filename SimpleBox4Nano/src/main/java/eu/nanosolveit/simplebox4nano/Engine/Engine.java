@@ -97,7 +97,7 @@ public class Engine {
 		this.rMassMolRemoval = new Array2DRowRealMatrix(new double[155]);
 	}
 
-	public void  build()
+	public void  build() throws Exception
 	{
 		for ( int i = 0; i< coeffs.length; i++ ) {
 			
@@ -324,48 +324,20 @@ public class Engine {
 		return this.rFugacity.getEntry(i, 0);
 	}
 	
-	void createMassMatrices() 
+	void createMassMatrices() throws Exception 
 	{		
 		for (int i = 0; i < this.rEmissions.getRowDimension(); i++)
 			this.rEmissions.setEntry(i, 0, -this.rEmissions.getEntry(i, 0) ); 
 	
-/*		RealMatrix rInv = MatrixUtils.inverse(this.rCoeffs);
-
-		for ( int i = 0; i< rInv.getRowDimension(); i++) {
-			for ( int j = 0; j< rInv.getColumnDimension(); j++ ) 
-				if ( Math.abs( rInv.getEntry( i , j ) ) < 1.e-5)
-					rInv.setEntry(i, j, 0.0);
-		}
-		
-		try {
-			FileWriter myWriter = new FileWriter("InverseCoeffMatrix2");
-			for ( int i = 0; i< rInv.getRowDimension(); i++) {
-				for ( int j = 0; j< rInv.getColumnDimension(); j++ ) 
-					myWriter.write(  Double.toString( rInv.getEntry( i , j ) ) + "\t" );
-
-				myWriter.write( "\n" );			    		  
-			}
-			myWriter.close();
- 
-		    } catch (IOException e) {
-		      System.out.println("An error occurred.");
-		      e.printStackTrace();
-		    }
-
-
-		this.rMassMol = rInv.multiply( this.rEmissions ) ;*/
-		
-		//It seems that LU has also a problem. It through matrix is singular while the direct approach returns the matrix. 
-		//We check if the matrix is reversible. If not we use direct approach.
-		//Update: Entering the threshold seems to fix the issue
 		LUDecomposition ludecompose = new LUDecomposition(this.rCoeffs, 1e-60);
 		DecompositionSolver lusolver = ludecompose.getSolver();	
-//		if ( lusolver.isNonSingular() )
-		this.rMassMol = lusolver.solve( this.rEmissions );
-//		else {			
-//			System.out.println( "Warning: The mass matrix is singular. Trying direct method ...");
-//			this.rMassMol = ( MatrixUtils.inverse(this.rCoeffs) ).multiply( this.rEmissions ) ;	
-//		}
+		
+		try {
+			this.rMassMol = lusolver.solve( this.rEmissions );
+		}
+		catch (Exception e) {
+			 throw new Exception("The system is singular, please insert different parameter values");
+		}
 
 		for (int i = 0; i < this.rEmissions.getRowDimension(); i++)
 			this.rEmissions.setEntry(i, 0, -this.rEmissions.getEntry(i, 0) ); 

@@ -55,67 +55,50 @@ import xyz.euclia.jaqpotj.models.Prediction;
 @Path("/")
 @Api(value = "NanoSolveIT REST APIs")
 public class RESTApis{
-	/*
 	@POST
 	@Path(value = "/restapi")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful result production", response = MSzetaApiResponseTuple.class),
-            @ApiResponse(code = 400, message = "The transaction schema is invalid and therefore the transaction has not been created.", response = String.class),
+	@ApiOperation(value = "Returns the various matrixes produced by SB4N", notes = "", response = Response.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful result production"),
+            @ApiResponse(code = 400, message = "Invalid input"),
             //@ApiResponse(code = 415, message = "The content type is unsupported"),
-            @ApiResponse(code = 500, message = "An unexpected error has occurred. The error has been logged and is being investigated.") 
-            })
-    */        
-	public Response simpleBox4NanoRestApi(SimpleBox4NanoApiInput input)
-	{
-		if(false)
-		{
-			return Response.status(415).type("text/plain").entity("just a test\n").build();
-		}
-		else
-		{
-			try
-			{
-				SimpleBox4NanoModel model = new SimpleBox4NanoModel( 
-						SimpleBox4NanoApiInput.getNanoData(input), 
-						SimpleBox4NanoApiInput.getScenariosData(input), 
-						input.getScenario(), 
-						input.getNanomaterial() 
-						);
-				
-				output outSB4Nano = new output();				
-				outSB4Nano.setAPIInfo(
-						model.getInput(), 
-						model.getEnvironment(), 
-						model.getEngine(), 
-						model.getNanoData(), 
-						model.getSceneName(), 
-						model.getNanoName() 
-						);		
-			
-				
-				SimpleBox4NanoApiResponse res = new SimpleBox4NanoApiResponse();
-				res.setConcentrations( outSB4Nano.getConcentrations() );
-				res.setMasses( outSB4Nano.getMasses() );
-				res.setDegradation( outSB4Nano.getDegradation() );
-				res.setEmission( outSB4Nano.getEmission() );
-				res.setFormation( outSB4Nano.getFormation() );
-				res.setFugacities( outSB4Nano.getFugacities() );
-				res.setInflow( outSB4Nano.getInflow() );
-				res.setOutflow( outSB4Nano.getOutflow() );
-				res.setRemoval( outSB4Nano.getRemoval() );
-				res.setTotalA( outSB4Nano.getTotalA() );
-				res.setTotalS( outSB4Nano.getTotalS() );
-				res.setTotalP( outSB4Nano.getTotalP() );
-				res.setTotalD( outSB4Nano.getTotalD() );
+            @ApiResponse(code = 500, message = "An unexpected error has occurred") 
+            }) 
+	public Response simpleBoxRestAPI( SimpleBox4NanoApiInput userInput) throws Exception
+	{		
+		if( userInput == null)
+			return Response.status(400).type("text/plain").entity("Invalid input\n").build();
 
-				return Response.ok( res ).type(MediaType.APPLICATION_JSON).build();
-			}
-			catch(Exception e)
-			{
-				return Response.status(500).type("text/plain").entity("An unexpected error has occurred\n").build();
-			}
+		try
+		{
+
+			SimpleBox4NanoModel sb4n_input = new SimpleBox4NanoModel( userInput );
+			SimpleBox4NanoApiResponse sb4n_out = new SimpleBox4NanoApiResponse();
+
+			sb4n_out.setMasses( sb4n_input.getMasses() );
+			sb4n_out.setConcentrations( sb4n_input.getConcentrations() );
+			sb4n_out.setFugacities( sb4n_input.getFugacities() );
+			sb4n_out.setTransport( sb4n_input.getTransport() );
+
+			sb4n_out.setInflow( sb4n_input.getInflow() );
+			sb4n_out.setOutflow( sb4n_input.getOutflow() );
+			sb4n_out.setRemoval( sb4n_input.getRemoval() );
+			sb4n_out.setFormation( sb4n_input.getFormation() );
+			sb4n_out.setDegradation( sb4n_input.getDegradation() );
+			sb4n_out.setEmission( sb4n_input.getEmission() );
+
+			sb4n_out.setTotalD( sb4n_input.getTotalD() );
+			sb4n_out.setTotalS( sb4n_input.getTotalS() );
+			sb4n_out.setTotalA( sb4n_input.getTotalA() );
+			sb4n_out.setTotalP( sb4n_input.getTotalP() );
+
+			return Response.ok(sb4n_out).type(MediaType.APPLICATION_JSON).build();
+		}
+		catch(Exception e)
+		{
+			return Response.status(500).type("text/plain").entity("An unexpected error has occurred\n").build();
 		}
 	}
 }

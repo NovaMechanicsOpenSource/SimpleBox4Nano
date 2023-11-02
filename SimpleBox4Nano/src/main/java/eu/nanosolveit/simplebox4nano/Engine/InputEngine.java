@@ -62,7 +62,7 @@ public class InputEngine {
 		else
 			substancesData.put("RadS", 10.*1e-9 );
 			
-		if ( Double.valueOf( nanomaterial.get("Kow") ) > 0.0  )
+		if ( Double.valueOf( nanomaterial.get("Kaw") ) > 0.0  )
 			substancesData.put("Kaw", Double.valueOf( nanomaterial.get("Kaw") ) );
 		else
 			substancesData.put("Kaw", 1e-20 );

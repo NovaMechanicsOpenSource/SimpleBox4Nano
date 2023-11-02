@@ -93,7 +93,6 @@ public class RESTApis{
 						model.getSceneName(), 
 						model.getNanoName() 
 						);		
-			
 				
 				SimpleBox4NanoApiResponse res = new SimpleBox4NanoApiResponse();
 				res.setConcentrations( outSB4Nano.getConcentrations() );

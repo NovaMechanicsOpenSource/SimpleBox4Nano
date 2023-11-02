@@ -214,7 +214,7 @@ public class SimpleBox4NanoModel {
 				for ( int i = 126; i < 143; i++) 
 					enviInfo.put( sheet.getRow( i ).getCell( 6 ).getStringCellValue() , String.valueOf( sheet.getRow( i ).getCell( iScenario ).getNumericCellValue() ) );
 				scenariosData.get( str ).insertEnviInfo( enviInfo );
-				
+								
 				iScenario++;
 			}
 
